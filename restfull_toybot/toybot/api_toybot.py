@@ -116,12 +116,14 @@ class Robot(object):
     def left(self):
         if self.on_table:
             self.angle = COMPASS[self.angle.left]
+            return self.report()
         else:
             raise NotOnTableException("Can't turn left, not on a table")
 
     def right(self):
         if self.on_table:
             self.angle = COMPASS[self.angle.right]
+            return self.report()
         else:
             raise NotOnTableException("Can't turn right, not on a table")
 
@@ -136,8 +138,9 @@ class Robot(object):
 
         new_x, new_y = self.angle.move(self.x_pos, self.y_pos)
         if self.table.is_position_on_table(new_x, new_y):
-            self.position = new_position
-            return self.reprort_orientation()
+            self.x_pos = new_x
+            self.y_pos = new_y
+            return self.report()
         else:
             raise WouldFallOffTableError(
                 "Cannot move to {}, {} -  that is off the table".format(
