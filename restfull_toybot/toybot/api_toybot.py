@@ -65,6 +65,10 @@ class SquareTable(RectangularTable):
 DEFAULT_TABLE = SquareTable(0, 0, 5)
 
 
+class InvalidAngleError(ValueError):
+    pass
+
+
 class WouldFallOffTableError(ValueError):
     pass
 
@@ -93,11 +97,16 @@ class Robot(object):
         self.table = DEFAULT_TABLE
 
     def place(self, x_pos, y_pos, angle):
-        if self.table.is_position_on_table(x_pos, y_pos):
+        if not angle or angle not in COMPASS:
+            raise InvalidAngleError(
+                "Angle {} is not supported".format(angle)
+            )
+        elif self.table.is_position_on_table(x_pos, y_pos):
+            self.on_table = True
             self.angle = COMPASS[angle]
             self.x_pos = x_pos
             self.y_pos = y_pos
-            return self.report_orientation()
+            return self.report()
         else:
             raise BadStartingPositionError(
                 "Starting position {}, {} not on the table".format(x_pos,
@@ -108,15 +117,23 @@ class Robot(object):
         if self.on_table:
             self.angle = COMPASS[self.angle.left]
         else:
-            raise NotOnTableException()
+            raise NotOnTableException("Can't turn left, not on a table")
 
     def right(self):
         if self.on_table:
             self.angle = COMPASS[self.angle.right]
         else:
-            raise NotOnTableException()
+            raise NotOnTableException("Can't turn right, not on a table")
 
     def move(self):
+        if not self.on_table:
+            raise NotOnTableException("Can't move, not on a table")
+
+        if not self.angle:
+            raise InvalidAngleError(
+                "Angle {} is not supported".format(angle)
+            )
+
         new_x, new_y = self.angle.move(self.x_pos, self.y_pos)
         if self.table.is_position_on_table(new_x, new_y):
             self.position = new_position
@@ -128,12 +145,15 @@ class Robot(object):
                 )
             )
 
-    def report_orientation(self):
-        return {
-            "angle": self.angle.name,
-            "x_pos": self.x_pos
-            "y_pos": self.y_pos
-        }
+    def report(self):
+        if self.on_table:
+            return {
+                "angle": self.angle.name,
+                "x_pos": self.x_pos,
+                "y_pos": self.y_pos
+            }
+        else:
+            raise NotOnTableException("Not on a table")
 
     def persist(self):
         return {
