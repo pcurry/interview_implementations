@@ -98,6 +98,38 @@ class TestToybot(unittest.TestCase):
         self.assertEqual(pre["x_pos"] - 1, post["x_pos"])
         self.assertEqual(pre["y_pos"], post["y_pos"])
 
+    def test_east_edge(self):
+        testbot = api_toybot.Robot("Testbot")
+        pre = testbot.place(4, 1, "EAST")
+        self.assertRaises(
+            api_toybot.WouldFallOffTableError,
+            testbot.move
+        )
+
+    def test_west_edge(self):
+        testbot = api_toybot.Robot("Testbot")
+        pre = testbot.place(0, 1, "WEST")
+        self.assertRaises(
+            api_toybot.WouldFallOffTableError,
+            testbot.move
+        )
+
+    def test_north_edge(self):
+        testbot = api_toybot.Robot("Testbot")
+        pre = testbot.place(0, 4, "NORTH")
+        self.assertRaises(
+            api_toybot.WouldFallOffTableError,
+            testbot.move
+        )
+
+    def test_south_edge(self):
+        testbot = api_toybot.Robot("Testbot")
+        pre = testbot.place(2, 0, "SOUTH")
+        self.assertRaises(
+            api_toybot.WouldFallOffTableError,
+            testbot.move
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
