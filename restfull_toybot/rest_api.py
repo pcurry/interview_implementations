@@ -1,26 +1,48 @@
 #!/usr/bin/env python2.7
 
+import json
+
 from webob import Request
 from webob import Response
 from webob import dec
 from webob import exc
 
+from api_toybot import Robot
+
 
 class RestfullToybot(object):
 
-    def __call__(self, environ, start_response):
-        req = Request(environ)
-        if req.path_info_peek() == "list":
+    def __init__(self):
+        self.robots = {}
+
+    @dec.wsgify
+    def __call__(self, req):
+        mount_point = req.path_info_pop()
+        if req.method == "GET" and req.path_info_peek() == "list":
             return self.list(req)
 
+        robot_name = req.path_info_pop()
+        if req.method == "POST" and not req.path_info_peek():
+            return self.create(robot_name)
+
+    @dec.wsgify
+    def create(self, robot_name):
+        resp = Response()
+        if robot_name in self.robots:
+            resp.status_int = 302
+            return resp
+        else:
+            self.robots[robot_name] = Robot(robot_name)
+            return resp
 
     @dec.wsgify
     def list(self, req):
         resp = Response()
-        
+        resp.content_type = 'application/json'
+        # Get the robots
+        resp.json = self.robots.keys()
+        return resp
 
-    def persist_bot(self, sessionid, toybot):
-        pass
 
 def main():
     app = RestfullToybot()
