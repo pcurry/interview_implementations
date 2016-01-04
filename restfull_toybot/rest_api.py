@@ -1,7 +1,5 @@
 #!/usr/bin/env python2.7
 
-import json
-
 from webob import Request
 from webob import Response
 from webob import dec
