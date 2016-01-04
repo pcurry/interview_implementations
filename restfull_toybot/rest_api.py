@@ -24,6 +24,9 @@ class RestfullToybot(object):
         robot_name = req.path_info_pop()
         if req.method == "POST" and not req.path_info_peek():
             return self.create(robot_name)
+        fail_default = Response()
+        fail_default.status_int = 500
+        return fail_default
 
     @dec.wsgify
     def create(self, robot_name):
