@@ -30,7 +30,7 @@ class RestfullToybot(object):
     def create(self, robot_name):
         resp = Response()
         if robot_name in self.robots:
-            resp.status_int = 302
+            resp.status_int = 303
             return resp
         else:
             self.robots[robot_name] = Robot(robot_name)

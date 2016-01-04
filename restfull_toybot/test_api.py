@@ -33,7 +33,7 @@ class TestAPI(unittest.TestCase):
     def test_create_bot_collision(self):
         resp = self.app.post("/robot/alec")
         resp2 = self.app.post("/robot/alec")
-        self.assertEqual(302, resp2.status_int)
+        self.assertEqual(303, resp2.status_int)
 
     def test_list_bots_none(self):
         resp = self.app.get("/robot/list")
