@@ -31,10 +31,9 @@ class RestfullToybot(object):
         resp = Response()
         if robot_name in self.robots:
             resp.status_int = 303
-            return resp
         else:
             self.robots[robot_name] = Robot(robot_name)
-            return resp
+        return resp
 
     @dec.wsgify
     def list(self, req):

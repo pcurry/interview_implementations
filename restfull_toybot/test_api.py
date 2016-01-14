@@ -27,7 +27,7 @@ class TestAPI(unittest.TestCase):
     def test_create_bot(self):
         resp = self.app.post("/robot/danherr")
         resp2 = self.app.get("/robot/danherr")
-        
+
         # Some more stuff to validate having a functional bot.
 
     def test_create_bot_collision(self):
@@ -39,8 +39,16 @@ class TestAPI(unittest.TestCase):
         resp = self.app.get("/robot/list")
         self.assertEqual([], resp.json)
 
+    def test_list_bots_some(self):
+        create_dan = self.app.post("/robot/danherr")
+        robots = self.app.get("/robot/list")
+        self.assertEqual(["danherr"], robots.json)
 
-
+        create_alec = self.app.post("/robot/alec")
+        robots = self.app.get("/robot/list")
+        robots_list = list(robots.json)
+        self.assertIn("alec", robots_list)
+        self.assertIn("danherr", robots_list)
 
 
         """
