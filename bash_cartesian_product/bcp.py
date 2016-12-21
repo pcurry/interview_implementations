@@ -32,8 +32,8 @@ def parse_string(raw):
     total_consumed = 0
 
     def record_literal_if_needed(end_literal):
-         if end_literal > start_literal:
-             components.append(LiteralString(raw[start_literal:end_literal]))
+        if end_literal > start_literal:
+            components.append(LiteralString(raw[start_literal:end_literal]))
 
     while current < len(raw):
         if raw[current] == " ":
@@ -67,6 +67,9 @@ def parse_string(raw):
 def process_string(raw):
     if is_simple_string(raw):
         return raw
+
+    if " " in raw and "\ " not in raw:
+        return process_list_of_strings(raw.split())
 
     components, subunits, consumed = parse_string(raw)
     print(consumed)
@@ -144,9 +147,10 @@ def render(components):
             ]
         elif type(component) == list:
             rendered_subunits = render(component)
-            results = [result + subunit
-                       for result in results
-                       for subunit in rendered_subunits
+            results = [
+                result + subunit
+                for result in results
+                for subunit in rendered_subunits
             ]
         else:
             raise ValueError(component)
