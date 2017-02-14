@@ -6,6 +6,7 @@ import re
 # I didn't finish the code on the board, and that annoyed me,
 # so here we are.
 
+
 def is_palindrome(in_str, including_spaces=False):
     """
     """
@@ -18,10 +19,9 @@ def is_palindrome(in_str, including_spaces=False):
     working = de_punct.lower()
     front = 0
     back = len(working) - 1
-    res = True
-    while res and front <= back:
-        res = res and working[front] == working[back]
+    while front < back:
+        if working[front] != working[back]:
+            return False
         front += 1
         back -= 1
-    return res
-
+    return True
