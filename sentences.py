@@ -10,7 +10,7 @@ from collections import defaultdict
 
 
 def string_stats(string):
-    working, replacements_count = re.subn('[;:,.]+', ' ', string)
+    working, replacements_count = re.subn('[;:,. ]+', ' ', string)
     words = working.strip().split(' ')
     counts = defaultdict(list)
     for word in words:
@@ -34,4 +34,12 @@ def shortest(string):
 
 if __name__ == '__main__':
     print("Testing sentences library")
-    
+    cow_sentence = "The cow jumped over the moon."
+    commit_message = "Added the sentences library for an interview question."
+    shortest_verse = "Jesus wept."
+    assert(longest(cow_sentence) == "jumped")
+    assert(shortest(cow_sentence) == "The")
+    assert(longest(commit_message) == "sentences")
+    assert(shortest(commit_message) == "an")
+    assert(longest(shortest_verse) == "Jesus")
+    assert(shortest(shortest_verse) == "wept")
