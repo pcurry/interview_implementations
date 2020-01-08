@@ -5,15 +5,25 @@
 """
 
 import re
+import unittest
 
 from collections import defaultdict
 
 
 def string_stats(string):
-    working, replacements_count = re.subn('[;:,. ]+', ' ', string)
-    words = working.strip().split(' ')
+    if string is None:
+        raise ValueError("Expected a string, got a None")
+
+    working, dash_replacements = re.subn(' [-]+ ', ' ', string)
+    working, replacements_count = re.subn('[;:,.=>< ]+', ' ', working)
+    just_words = working.strip()
+
+    if len(just_words) == 0:
+        return '', '', {0: []}
+
     counts = defaultdict(list)
-    for word in words:
+
+    for word in just_words.split(' '):
         counts[len(word)].append(word)
 
     lengths = sorted(list(counts.keys()))
@@ -32,14 +42,113 @@ def shortest(string):
     return shortest
 
 
+
+class TestStringStats(unittest.TestCase):
+
+    def test_none(self):
+        with self.assertRaises(ValueError):
+            string_stats(None)
+
+    def test_empty_string(self):
+        least, most, counts = string_stats('')
+        self.assertEqual(least, '')
+        self.assertEqual(most, '')
+        self.assertEqual(len(counts), 1)
+        self.assertEqual(counts[0], [])
+
+    def test_period(self):
+        least, most, counts = string_stats('.')
+        self.assertEqual(least, '')
+        self.assertEqual(most, '')
+        self.assertEqual(len(counts), 1)
+        self.assertEqual(counts[0], [])
+
+    def test_semicolon(self):
+        least, most, counts = string_stats('; ')
+        self.assertEqual(least, '')
+        self.assertEqual(most, '')
+        self.assertEqual(len(counts), 1)
+        self.assertEqual(counts[0], [])
+
+    def test_ellipsis(self):
+        least, most, counts = string_stats(' ... ')
+        self.assertEqual(least, '')
+        self.assertEqual(most, '')
+        self.assertEqual(len(counts), 1)
+        self.assertEqual(counts[0], [])
+
+    def test_dash(self):
+        least, most, counts = string_stats('b --- aa')
+        self.assertEqual(least, 'b')
+        self.assertEqual(most, 'aa')
+        self.assertEqual(len(counts), 2)
+        self.assertEqual(counts[1], ['b'])
+        self.assertEqual(counts[2], ['aa'])
+
+    def test_cow_sentence(self):
+        cow_sentence = "The cow jumped over the moon."
+        least, most, counts = string_stats(cow_sentence)
+        self.assertEqual(least, "The")
+        self.assertEqual(most, "jumped")
+
+    def test_commit_message(self):
+        commit_message = "Added the sentences library for an interview question."
+        least, most, counts = string_stats(commit_message)
+        self.assertEqual(least, "an")
+        self.assertEqual(most, "sentences")
+
+    def test_shortest_verse(self):
+        shortest_verse = "Jesus wept."
+        least, most, counts = string_stats(shortest_verse)
+        self.assertEqual(least, "wept")
+        self.assertEqual(most, "Jesus")
+
+
+class TestLongest(unittest.TestCase):
+
+    def test_none(self):
+        with self.assertRaises(ValueError):
+            longest(None)
+
+    def test_empty_string(self):
+        self.assertEqual(longest(''), '')
+
+    def test_cow_sentence(self):
+        cow_sentence = "The cow jumped over the moon."
+        self.assertEqual(longest(cow_sentence), "jumped")
+
+    def test_commit_message(self):
+        commit_message = "Added the sentences library for an interview question."
+        self.assertEqual(longest(commit_message), "sentences")
+
+    def test_shortest_verse(self):
+        shortest_verse = "Jesus wept."
+        self.assertEqual(longest(shortest_verse), "Jesus")
+
+
+class TestShortest(unittest.TestCase):
+
+    def test_none(self):
+        with self.assertRaises(ValueError):
+            shortest(None)
+
+    def test_empty_string(self):
+        self.assertEqual(shortest(''), '')
+
+    def test_cow_sentence(self):
+        cow_sentence = "The cow jumped over the moon."
+        self.assertEqual(shortest(cow_sentence), "The")
+
+    def test_commit_message(self):
+        commit_message = "Added the sentences library for an interview question."
+        self.assertEqual(shortest(commit_message), "an")
+
+    def test_shortest_verse(self):
+        shortest_verse = "Jesus wept."
+        self.assertEqual(shortest(shortest_verse), "wept")
+
+
+
 if __name__ == '__main__':
     print("Testing sentences library")
-    cow_sentence = "The cow jumped over the moon."
-    commit_message = "Added the sentences library for an interview question."
-    shortest_verse = "Jesus wept."
-    assert(longest(cow_sentence) == "jumped")
-    assert(shortest(cow_sentence) == "The")
-    assert(longest(commit_message) == "sentences")
-    assert(shortest(commit_message) == "an")
-    assert(longest(shortest_verse) == "Jesus")
-    assert(shortest(shortest_verse) == "wept")
+    unittest.main()

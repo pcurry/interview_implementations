@@ -1,0 +1,6 @@
+For the interview question, I implemented a function that calculated the lengths of the words in a sentence, and created a dictionary of the words found, keyed by word length. Each key had a list of words of that length, organized in the order the words were encountered. I then returned the dictionary, as well as the first encountered word of the shortest length and the first encountered word of the greatest length.
+
+Assumptions include that punctuation separating words doesn't count towards word length, but that hyphenated words and contractions count their included punctuation. Periods don't count, and ellipsis doesn't count as a word.
+
+The three functions I created - one which does the work, the other two which take outputs of that work - have some testing coverage written using Python's 'unittest' module. Running the Python file with a Python 3.3+ interpreter should run the unittests, which should pass. Otherwise, you could include the file as a library or otherwise import the working functions from it.
+
