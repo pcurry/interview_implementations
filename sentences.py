@@ -34,12 +34,12 @@ def string_stats(string):
 
 def longest(string):
     shortest, longest, counts = string_stats(string)
-    return longest
+    return longest, len(longest)
 
 
 def shortest(string):
     shortest, longest, counts = string_stats(string)
-    return shortest
+    return shortest, len(shortest)
 
 
 
@@ -111,19 +111,19 @@ class TestLongest(unittest.TestCase):
             longest(None)
 
     def test_empty_string(self):
-        self.assertEqual(longest(''), '')
+        self.assertEqual(longest(''), ('', 0))
 
     def test_cow_sentence(self):
         cow_sentence = "The cow jumped over the moon."
-        self.assertEqual(longest(cow_sentence), "jumped")
+        self.assertEqual(longest(cow_sentence), ("jumped", 6))
 
     def test_commit_message(self):
         commit_message = "Added the sentences library for an interview question."
-        self.assertEqual(longest(commit_message), "sentences")
+        self.assertEqual(longest(commit_message), ("sentences", 9))
 
     def test_shortest_verse(self):
         shortest_verse = "Jesus wept."
-        self.assertEqual(longest(shortest_verse), "Jesus")
+        self.assertEqual(longest(shortest_verse), ("Jesus", 5))
 
 
 class TestShortest(unittest.TestCase):
@@ -133,19 +133,19 @@ class TestShortest(unittest.TestCase):
             shortest(None)
 
     def test_empty_string(self):
-        self.assertEqual(shortest(''), '')
+        self.assertEqual(shortest(''), ('', 0))
 
     def test_cow_sentence(self):
         cow_sentence = "The cow jumped over the moon."
-        self.assertEqual(shortest(cow_sentence), "The")
+        self.assertEqual(shortest(cow_sentence), ("The", 3))
 
     def test_commit_message(self):
         commit_message = "Added the sentences library for an interview question."
-        self.assertEqual(shortest(commit_message), "an")
+        self.assertEqual(shortest(commit_message), ("an", 2))
 
     def test_shortest_verse(self):
         shortest_verse = "Jesus wept."
-        self.assertEqual(shortest(shortest_verse), "wept")
+        self.assertEqual(shortest(shortest_verse), ("wept", 4))
 
 
 
