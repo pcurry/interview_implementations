@@ -42,8 +42,24 @@ def equal_sum(harry):
         return None
 
 
-def equal_sum_recursive(harry):
-    pass
+def equal_sum_recursive(harry, l_sum=None, r_sum=None):
+    """This function should calculate the same results as the
+    iterative version, equal_sum. This is a recursive
+    implementation, primarily because I want to write one.
+
+    """
+    # First we handle the base cases
+    if l_sum is None and r_sum is None:
+        if not harry or len(harry) <= 1:
+            return None
+        if len(harry) == 2:
+            if harry[0] == harry[1]:
+                return (harry[0:1], harry[1:])
+            else:
+                return None
+
+    # Now start handling the recursive cases
+
 
 
 def equal_sum_tail_recursive(harry):
