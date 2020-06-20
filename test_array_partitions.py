@@ -17,13 +17,20 @@ class TestEqualSum(unittest.TestCase):
     def test_single_element_list(self):
         self.assertIsNone(self.equal_sum([3]))
 
-    def test_balanced_pairs(self):
-        case_1 = [1, 1]
-        result_1 = self.equal_sum(case_1)
-        self.assertEqual(result_1, ([1], [1]))
-        case_2 = [1, 2, 1, 2]
-        result_2 = self.equal_sum(case_2)
-        self.assertEqual(result_2, ([1, 2], [1, 2]))
+    def test_two_equal_elements(self):
+        case = [1, 1]
+        result = self.equal_sum(case)
+        self.assertEqual(result, ([1], [1]))
+
+    def test_pairs_ordered_alike(self):
+        case = [1, 2, 1, 2]
+        result = self.equal_sum(case)
+        self.assertEqual(result, ([1, 2], [1, 2]))
+
+    def test_pairs_order_reversed(self):
+        case = [3, 1, 1, 3]
+        result = self.equal_sum(case)
+        self.assertEqual(result, ([3, 1], [1, 3]))
 
     def test_descending_list(self):
         case = [3, 2, 1]
