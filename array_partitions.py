@@ -48,19 +48,45 @@ def equal_sum_recursive(harry, l_sum=None, r_sum=None):
     implementation, primarily because I want to write one.
 
     """
-    # First we handle the base cases
+    # First we handle first call cases
     if l_sum is None and r_sum is None:
-        if not harry or len(harry) <= 1:
-            return None
         if len(harry) == 2:
             if harry[0] == harry[1]:
-                return (harry[0:1], harry[1:])
+                return ([harry[0]], [harry[1]])
             else:
                 return None
+        if not harry or len(harry) <= 1:
+            return None
+        else:
+            lhv = harry[0]
+            rhv = harry[-1]
+            recursed = equal_sum_recursive(harry[1:-1], lhv, rhv)
+            if recursed is None:
+                return None
+            else:
+                return ([lhv] + recursed[0], recursed[1] + [rhv])
 
     # Now start handling the recursive cases
+    if len(harry) == 0:
+        return ([], [])
+
+    if l_sum > r_sum:
+        rhv = harry[-1]
+        recurse = equal_sum_recursive(harry[:-1], l_sum, r_sum + rhv)
+        if recurse is None:
+            return None
+        else:
+            return (recurse[0], recurse[1] + [rhv])
+    else:
+        lhv = harry[0]
+        recurse = equal_sum_recursive(harry[1:], l_sum + lhv, r_sum)
+        if recurse is None:
+            return None
+        else:
+            return ([lhv] + recurse[0], recurse[1])
+
+    raise Exception()
 
 
-
-def equal_sum_tail_recursive(harry):
+def equal_sum_tail_recursive(harry, l_sum=None, l_array=None, r_sum=None, r_array=None):
     pass
