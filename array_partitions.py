@@ -89,4 +89,42 @@ def equal_sum_recursive(harry, l_sum=None, r_sum=None):
 
 
 def equal_sum_tail_recursive(harry, l_sum=None, l_array=None, r_sum=None, r_array=None):
-    pass
+    """Even though Python doesn't have a tail-recursive optimization, I wanted
+    to write a tail-recursive implementation, just because. Starting from
+    the recursive version code, because the base cases are the same.
+    """
+
+    # First we handle first call cases
+    if l_sum is None and l_array is None and r_sum is None and r_array is None:
+        if len(harry) == 2:
+            if harry[0] == harry[1]:
+                return ([harry[0]], [harry[1]])
+            else:
+                return None
+        if not harry or len(harry) <= 1:
+            return None
+        else:
+            l_sum = harry[0]
+            l_array = [l_sum]
+            r_sum = harry[-1]
+            r_array = [r_sum]
+            return equal_sum_tail_recursive(
+                harry[1:-1], l_sum, l_array, r_sum, r_array)
+
+    # Now start handling the recursive cases
+    if len(harry) == 0:
+        if l_sum == r_sum:
+            return (l_array, r_array)
+        else:
+            return None
+
+    if l_sum > r_sum:
+        r_sum += harry[-1]
+        r_array = [harry[-1]] + r_array
+        next_harry = harry[:-1]
+    else:
+        l_sum += harry[0]
+        l_array += [harry[0]]
+        next_harry = harry[1:]
+
+    return equal_sum_tail_recursive(next_harry, l_sum, l_array, r_sum, r_array)
